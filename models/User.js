@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const thoughtSchema = require('./Thought');
 
 // Email check  from https://thewebdev.info/2022/03/16/how-to-validate-email-syntax-with-mongoose/#:~:text=To%20validate%20email%20syntax%20with%20Mongoose%2C%20we%20can%20set%20the,%40%5Cw%2B(%5B%5C.
@@ -30,7 +30,6 @@ const userSchema = new Schema(
         "Please fill a valid email address",
       ],
     },
-    // *************************************************************************************************************
     thoughts: [
       {
         type: Schema.Types.ObjectId,
@@ -47,9 +46,14 @@ const userSchema = new Schema(
   {
     toJSON: {
       getters: true,
+      virtuals: true,
     },
   }
 );
+
+userSchema.virtual('friendCount').get(function () {
+  return this.friends.length;
+});
 
 const User = model('user', userSchema);
 
